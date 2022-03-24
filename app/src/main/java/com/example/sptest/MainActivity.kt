@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         val editText:EditText = findViewById(R.id.editText)
         val button:Button = findViewById(R.id.button)
         val button2:Button = findViewById(R.id.button_show)
+
         button.setOnClickListener {
             val editor = getSharedPreferences("data",Context.MODE_PRIVATE).edit()
             editor.putString("name","Tom")
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
             editor.putBoolean("married",false)
             editor.apply()
         }
+
         button2.setOnClickListener {
             val prefs = getSharedPreferences("data",Context.MODE_PRIVATE)
             val name = prefs.getString("name","")
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
                 Log.e(TAG,married.toString())
             }
         }
+
     }
 
 }
