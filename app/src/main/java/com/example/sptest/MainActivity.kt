@@ -7,53 +7,33 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
-import java.io.*
-import java.lang.StringBuilder
-import java.sql.BatchUpdateException
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val inputText = onLoad()
         val editText:EditText = findViewById(R.id.editText)
         val button:Button = findViewById(R.id.button)
-        if (inputText.isNotEmpty()) {
-            editText.setText(inputText)
-            editText.setSelection(inputText.length)
-            Toast.makeText(this,"Restore succeed",Toast.LENGTH_SHORT).show()
-        }
+        val button2:Button = findViewById(R.id.button_show)
         button.setOnClickListener {
-            save(editText.text.toString())
+            val editor = getSharedPreferences("data",Context.MODE_PRIVATE).edit()
+            editor.putString("name","Tom")
+            editor.putInt("age",28)
+            editor.putBoolean("married",false)
+            editor.apply()
         }
-    }
-    private fun onLoad() :String {
-        val content = StringBuilder()
-        try {
-            val input = openFileInput("data")
-            val reader = BufferedReader(InputStreamReader(input))
-            reader.use {
-                reader.forEachLine {
-                    content.append(it)
-                }
+        button2.setOnClickListener {
+            val prefs = getSharedPreferences("data",Context.MODE_PRIVATE)
+            val name = prefs.getString("name","")
+            val age = prefs.getInt("age",0)
+            val married = prefs.getBoolean("married",false)
+            editText.setText(name)
+            if (name != null) {
+                Log.e(TAG,name)
+                Log.e(TAG,age.toString())
+                Log.e(TAG,married.toString())
             }
-        } catch (e:IOException) {
-            e.printStackTrace()
-        }
-        return content.toString()
-    }
-    private fun save(inputText:String) {
-        try {
-            val output = openFileOutput("data", Context.MODE_PRIVATE)
-            val writer = BufferedWriter(OutputStreamWriter(output))
-            writer.use {
-                it.write(inputText)
-            }
-            Log.e(TAG,"store success")
-        } catch (e:IOException) {
-            e.printStackTrace()
-            Log.e(TAG,"store error")
         }
     }
+
 }
